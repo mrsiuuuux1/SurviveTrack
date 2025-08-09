@@ -948,7 +948,7 @@ def locate_aid(history):
     return history, generate_aid_map(sos_zones)
 
 # ========================
-# UI LAYOUT WITH THE LAST OF US STYLING
+# UI LAYOUT WITH THE LAST OF US STYLING + BACKGROUND IMAGE
 # ========================
 custom_css = """
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
@@ -960,21 +960,61 @@ body {
 }
 
 .gradio-container {
+    /* OPTION 1: Your Post-Apocalyptic Background */
+    background: 
+        /* Dark overlay for readability - adjusted for the warm tones of your image */
+        linear-gradient(135deg, 
+            rgba(20, 15, 10, 0.75) 0%, 
+            rgba(30, 25, 15, 0.70) 25%,
+            rgba(25, 20, 15, 0.75) 50%,
+            rgba(35, 25, 15, 0.70) 75%,
+            rgba(20, 15, 10, 0.75) 100%
+        ),
+        /* Your post-apocalyptic cityscape */
+        url('https://i.postimg.cc/YC386F3Y/bg-image.jpg');
+    
+    /* OPTION 2: Alternative - Multiple layered backgrounds */
+    /* Uncomment the section below and comment out OPTION 1 above if you prefer this approach */
+    /*
     background: 
         linear-gradient(135deg, 
-            rgba(20, 15, 10, 0.95) 0%, 
-            rgba(40, 25, 15, 0.90) 25%,
-            rgba(25, 20, 15, 0.95) 50%,
-            rgba(35, 20, 10, 0.90) 75%,
-            rgba(20, 15, 10, 0.95) 100%
+            rgba(20, 15, 10, 0.90) 0%, 
+            rgba(40, 25, 15, 0.85) 25%,
+            rgba(25, 20, 15, 0.90) 50%,
+            rgba(35, 20, 10, 0.85) 75%,
+            rgba(20, 15, 10, 0.90) 100%
         ),
-        radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(160, 82, 45, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(160, 82, 45, 0.10) 0%, transparent 50%),
+        url('https://example.com/your-background-image.jpg');
+    */
+    
     background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     font-family: 'Rajdhani', 'Share Tech Mono', monospace;
     color: #d4af37;
     min-height: 100vh;
     position: relative;
+}
+
+/* OPTION 3: Add background image as a separate layer */
+.gradio-container::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://example.com/your-background-image.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    opacity: 0.3; /* Adjust opacity for subtlety */
+    z-index: -2; /* Behind everything else */
+    pointer-events: none;
 }
 
 /* Dust particles effect */
@@ -1000,8 +1040,8 @@ body {
     50% { transform: translateY(-20px) rotate(180deg); }
 }
 
-/* Film grain texture */
-.gradio-container::after {
+/* Film grain texture - moved to different pseudo-element if using OPTION 3 */
+.gradio-container .film-grain {
     content: '';
     position: fixed;
     top: 0;
@@ -1024,6 +1064,47 @@ body {
 @keyframes film-grain {
     0%, 100% { opacity: 0.02; }
     50% { opacity: 0.05; }
+}
+
+/* OPTION 4: Specific section background (for status panel or chatbot) */
+.survival-status-panel {
+    background: 
+        linear-gradient(135deg, 
+            rgba(15, 10, 5, 0.95) 0%, 
+            rgba(25, 15, 10, 0.90) 50%,
+            rgba(20, 12, 8, 0.95) 100%
+        ),
+        url('https://example.com/your-panel-background.jpg');
+    background-size: cover;
+    background-position: center;
+    border: 2px solid rgba(218, 165, 32, 0.6);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 
+        0 0 25px rgba(218, 165, 32, 0.3),
+        inset 0 2px 10px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* OPTION 5: Chatbot background image */
+.gr-chatbot {
+    background: 
+        linear-gradient(135deg, 
+            rgba(20, 15, 10, 0.90) 0%, 
+            rgba(30, 20, 15, 0.85) 100%
+        ),
+        url('https://example.com/your-chat-background.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: local !important;
+    border: 1px solid rgba(139, 69, 19, 0.4) !important;
+    box-shadow: 
+        0 0 30px rgba(139, 69, 19, 0.2),
+        inset 0 2px 10px rgba(0,0,0,0.3) !important;
+    backdrop-filter: blur(5px) !important;
 }
 
 .gr-button {
@@ -1106,17 +1187,6 @@ body {
     box-shadow: 
         0 0 30px rgba(218, 165, 32, 0.2),
         inset 0 2px 4px rgba(0,0,0,0.3) !important;
-}
-
-.gr-chatbot {
-    background: linear-gradient(135deg, 
-        rgba(20, 15, 10, 0.95) 0%, 
-        rgba(30, 20, 15, 0.90) 100%) !important;
-    border: 1px solid rgba(139, 69, 19, 0.4) !important;
-    box-shadow: 
-        0 0 30px rgba(139, 69, 19, 0.2),
-        inset 0 2px 10px rgba(0,0,0,0.3) !important;
-    backdrop-filter: blur(5px) !important;
 }
 
 .gr-markdown h1 {
@@ -1219,24 +1289,6 @@ body {
 @keyframes loading-pulse {
     0%, 100% { opacity: 0.6; }
     50% { opacity: 1; }
-}
-
-/* Enhanced Status Panel Styling */
-.survival-status-panel {
-    background: linear-gradient(135deg, 
-        rgba(15, 10, 5, 0.98) 0%, 
-        rgba(25, 15, 10, 0.95) 50%,
-        rgba(20, 12, 8, 0.98) 100%);
-    border: 2px solid rgba(218, 165, 32, 0.6);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 
-        0 0 25px rgba(218, 165, 32, 0.3),
-        inset 0 2px 10px rgba(0,0,0,0.4);
-    position: relative;
-    overflow: hidden;
-    font-family: 'Share Tech Mono', monospace;
 }
 
 .survival-status-panel::before {
